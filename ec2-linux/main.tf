@@ -41,7 +41,8 @@ data "aws_ssm_parameter" "lookup_vpc_id" {
 ################################################################################
 
 module "ec2" {
-  source = "../ec2-base/"
+  # source = "../ec2-base/"
+  source = "git::https://github.com/stercamp/tf-aws-modules-catalog//ec2-base"
   count = local.create ? 1 : 0
 
   name = "${var.name}"
