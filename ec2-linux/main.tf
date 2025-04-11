@@ -52,11 +52,18 @@ module "ec2" {
   user_data                   = <<-EOT
     #!/bin/bash
     ${local.user_data}
+    ${local.validate_bootstrap_script}
   EOT
   subnet_id = local.subnet_id
+
+
   # iam_instance_profile = aws_iam_instance_profile.this[0].id
-  create_iam_instance_profile = true
-  iam_role_name = "${var.name}-ec2-role"
+  create_iam_instance_profile = false
+  
+  # Modified to use exisitng InstanceProfile
+  # iam_role_name = "${var.name}-ec2-role"
+  iam_role_name = var.iam_role_name
+
   metadata_options = {
     "http_endpoint"               = "enabled"
     "http_put_response_hop_limit" = 1
