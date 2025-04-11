@@ -59,7 +59,7 @@ module "ec2" {
 
   # iam_instance_profile = aws_iam_instance_profile.this[0].id
   create_iam_instance_profile = false
-  iam_instance_profile = var.iam_role_name
+  iam_instance_profile = var.iam_instance_profile
   
   # Modified to use exisitng InstanceProfile
   # iam_role_name = "${var.name}-ec2-role"
