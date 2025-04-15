@@ -19,19 +19,19 @@ locals {
 }
 
 data "aws_ssm_parameter" "lookup_ami" {
-  count = local.create && var.ami == null ? 1 : 0
+  # count = local.create && var.ami == null ? 1 : 0
 
   name = var.ami_ssm_parameter
 }
 
 data "aws_ssm_parameter" "lookup_subnet_id" {
-  count = local.create && var.subnet_id == null ? 1 : 0
+  # count = local.create && var.subnet_id == null ? 1 : 0
 
   name = "/platform/network/subnet_a"
 }
 
 data "aws_ssm_parameter" "lookup_vpc_id" {
-  count = local.create && var.vpc_id == null ? 1 : 0
+  # count = local.create && var.vpc_id == null ? 1 : 0
 
   name = "/platform/network/vpc_id"
 }
