@@ -19,7 +19,7 @@ locals {
 }
 
 data "aws_ssm_parameter" "lookup_ami" {
-  count = local.create && var.ami == null ? 1 : 0
+  # count = local.create && var.ami == null ? 1 : 0
 
   name = var.ami_ssm_parameter
 }
