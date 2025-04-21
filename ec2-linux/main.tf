@@ -4,7 +4,7 @@ locals {
   create = var.create
   region = data.aws_region.current.name
   is_t_instance_type = replace(var.instance_type, "/^t(2|3|3a|4g){1}\\..*$/", "1") == "1" ? true : false
-  ami = try(coalesce(var.ami, try(nonsensitive(data.aws_ssm_parameter.lookup_ami[0].value), null)), null)
+  ami = try(coalesce(var.ami, try(nonsensitive(data.aws_ssm_parameter.lookup_ami.value), null)), null)
   security_group_ids = var.vpc_security_group_ids != null ? var.vpc_security_group_ids : [aws_security_group.security_group[0].id]
 
   vpc_id = var.vpc_id != null ? var.vpc_id : try(nonsensitive(data.aws_ssm_parameter.lookup_vpc_id[0].value), null)
