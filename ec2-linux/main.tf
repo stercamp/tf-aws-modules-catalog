@@ -8,7 +8,7 @@ locals {
   security_group_ids = var.vpc_security_group_ids != null ? var.vpc_security_group_ids : [aws_security_group.security_group[0].id]
 
   vpc_id = var.vpc_id != null ? var.vpc_id : try(nonsensitive(data.aws_ssm_parameter.lookup_vpc_id[0].value), null)
-  subnet_id = var.subnet_id != null ? var.subnet_id : try(nonsensitive(data.aws_ssm_parameter.lookup_subnet_id[0].value), null)
+  subnet_id = var.subnet_id != null ? var.subnet_id : try(nonsensitive(data.aws_ssm_parameter.lookup_subnet_id.value), null)
   user_data = var.user_data != null ? var.user_data : ""
   validate_bootstrap_script = <<EOF
       TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
@@ -25,7 +25,7 @@ data "aws_ssm_parameter" "lookup_ami" {
 }
 
 data "aws_ssm_parameter" "lookup_subnet_id" {
-  count = local.create && var.subnet_id == null ? 1 : 0
+  # count = local.create && var.subnet_id == null ? 1 : 0
 
   name = "/platform/network/subnet_a"
 }
