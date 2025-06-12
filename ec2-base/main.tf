@@ -580,7 +580,7 @@ resource "null_resource" "validate_bootstrap" {
 
   provisioner "local-exec" {
     environment = {
-      instance_id = module.ec2[0].id
+      instance_id = aws_instance.ignore_ami[0].id
       region      = local.region
     }
     command = <<EOT
