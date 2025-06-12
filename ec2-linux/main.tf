@@ -78,59 +78,59 @@ module "ec2" {
 # EC2 bootstrap validation
 ################################################################################
 
-resource "null_resource" "validate_bootstrap" {
-  count = local.create ? 1 : 0
+# resource "null_resource" "validate_bootstrap" {
+#   count = local.create ? 1 : 0
 
-  # provisioner "local-exec" {
-  #   command = <<EOT
-  #     max_attempts=3
-  #     sleep_time=60
-  #     attempt=0
-  #     while [ $attempt -lt $max_attempts ]; do
-  #       tags=$(aws ec2 describe-tags --filters "Name=resource-id,Values=${module.ec2[0].id}" --query "Tags[?Key=='Bootstrap'].Value" --region ${local.region} --output text)
-  #       if [ "$tags" == "Successful" ]; then
-  #         echo "Instance bootstrap validation succeeded"
-  #         exit 0
-  #       fi
-  #       echo "Attempt $((attempt+1))/$max_attempts: Bootstrap tag not found, retrying in $sleep_time seconds..."
-  #       attempt=$((attempt+1))
-  #       sleep $sleep_time
-  #     done
-  #     echo "Instance bootstrap validation failed after $max_attempts attempts"
-  #     exit 1
-  #   EOT
-  # }
+#   # provisioner "local-exec" {
+#   #   command = <<EOT
+#   #     max_attempts=3
+#   #     sleep_time=60
+#   #     attempt=0
+#   #     while [ $attempt -lt $max_attempts ]; do
+#   #       tags=$(aws ec2 describe-tags --filters "Name=resource-id,Values=${module.ec2[0].id}" --query "Tags[?Key=='Bootstrap'].Value" --region ${local.region} --output text)
+#   #       if [ "$tags" == "Successful" ]; then
+#   #         echo "Instance bootstrap validation succeeded"
+#   #         exit 0
+#   #       fi
+#   #       echo "Attempt $((attempt+1))/$max_attempts: Bootstrap tag not found, retrying in $sleep_time seconds..."
+#   #       attempt=$((attempt+1))
+#   #       sleep $sleep_time
+#   #     done
+#   #     echo "Instance bootstrap validation failed after $max_attempts attempts"
+#   #     exit 1
+#   #   EOT
+#   # }
 
-  provisioner "local-exec" {
-    environment = {
-      instance_id = module.ec2[0].id
-      region      = local.region
-    }
-    command = <<EOT
-      max_attempts=20
-      sleep_time=30
-      attempt=0
-      while [ $attempt -lt $max_attempts ]; do
-        tags=$(aws ec2 describe-tags --filters "Name=resource-id,Values=$instance_id" --query "Tags[?Key=='bootstrap'].Value" --region $region --output text)
-        if [ "$tags" = "successful" ]; then
-          echo "Instance bootstrap validation succeeded"
-        fi
-          exit 0
-        echo "Attempt $((attempt+1))/$max_attempts: Bootstrap tag not found, retrying in $sleep_time seconds..."
-        attempt=$((attempt+1))
-        sleep $sleep_time
-      done
-      echo "Instance bootstrap validation failed after $max_attempts attempts"
-      exit 1
-    EOT
-  }
+#   provisioner "local-exec" {
+#     environment = {
+#       instance_id = module.ec2[0].id
+#       region      = local.region
+#     }
+#     command = <<EOT
+#       max_attempts=20
+#       sleep_time=30
+#       attempt=0
+#       while [ $attempt -lt $max_attempts ]; do
+#         tags=$(aws ec2 describe-tags --filters "Name=resource-id,Values=$instance_id" --query "Tags[?Key=='bootstrap'].Value" --region $region --output text)
+#         if [ "$tags" = "successful" ]; then
+#           echo "Instance bootstrap validation succeeded"
+#         fi
+#           exit 0
+#         echo "Attempt $((attempt+1))/$max_attempts: Bootstrap tag not found, retrying in $sleep_time seconds..."
+#         attempt=$((attempt+1))
+#         sleep $sleep_time
+#       done
+#       echo "Instance bootstrap validation failed after $max_attempts attempts"
+#       exit 1
+#     EOT
+#   }
 
-  triggers = {
-    instance_id = module.ec2[0].id
-  }
+#   triggers = {
+#     instance_id = module.ec2[0].id
+#   }
 
-  depends_on = [module.ec2]
-}
+#   depends_on = [module.ec2]
+# }
 
 ################################################################################
 # Security Group
