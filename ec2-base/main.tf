@@ -578,6 +578,8 @@ resource "null_resource" "validate_bootstrap" {
   #   EOT
   # }
 
+  #Updated this with new bash code
+
   provisioner "local-exec" {
     environment = {
       instance_id = aws_instance.ignore_ami[0].id
