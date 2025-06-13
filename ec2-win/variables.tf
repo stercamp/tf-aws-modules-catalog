@@ -10,15 +10,15 @@ variable "name" {
   default     = "lumen-ec2"
 }
 
-variable "os" {
-  description = "OS of AMI"
-  type        = string
-  # default     = "rhel"
-  validation {
-    condition     = contains(["rhel", "ubuntu", "rocky9", "windows"], var.os)
-    error_message = "Support OSs are: rhel, ubunutu, rocky9, windows"
-  }
-}
+# variable "os" {
+#   description = "OS of AMI"
+#   type        = string
+#   # default     = "rhel"
+#   validation {
+#     condition     = contains(["datacenter"], var.os)
+#     error_message = "Support OSs are: datacenter"
+#   }
+# }
 
 variable "vpc_id" {
   default = ""
