@@ -11,10 +11,13 @@ locals {
   # subnet_id = var.subnet_id != null ? var.subnet_id : try(nonsensitive(data.aws_ssm_parameter.lookup_subnet_id.value), null)
   subnet_id = var.subnet_id
   user_data = var.user_data != null ? var.user_data : ""
+  # validate_bootstrap_script = <<EOF
+  #     TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+  #     INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id)
+  #     aws ec2 create-tags --resources $INSTANCE_ID --tags Key=Bootstrap,Value=Successful --region ${local.region} 
+  # EOF
+
   validate_bootstrap_script = <<EOF
-      TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
-      INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id)
-      aws ec2 create-tags --resources $INSTANCE_ID --tags Key=Bootstrap,Value=Successful --region ${local.region} 
   EOF
 
 }
@@ -55,6 +58,13 @@ module "ec2" {
   #   ${local.user_data}
   #   ${local.validate_bootstrap_script}
   # EOT
+
+  user_data                   = <<-EOT
+    ${local.user_data}
+    ${local.validate_bootstrap_script}
+  EOT
+
+
   subnet_id = local.subnet_id
 
 

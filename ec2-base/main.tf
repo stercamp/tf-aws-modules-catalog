@@ -8,11 +8,11 @@ locals {
   ami = try(coalesce(var.ami, try(nonsensitive(data.aws_ssm_parameter.this.value), null)), null)
 
   user_data = var.user_data != null ? var.user_data : ""
-  validate_bootstrap_script = <<EOF
-      TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
-      INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id)
-      aws ec2 create-tags --resources $INSTANCE_ID --tags Key=Bootstrap,Value=Successful --region ${local.region} 
-  EOF
+  # validate_bootstrap_script = <<EOF
+  #     TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+  #     INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id)
+  #     aws ec2 create-tags --resources $INSTANCE_ID --tags Key=Bootstrap,Value=Successful --region ${local.region} 
+  # EOF
 
 }
 
@@ -209,10 +209,14 @@ resource "aws_instance" "ignore_ami" {
   instance_type        = var.instance_type
   hibernation          = var.hibernation
 
-  user_data                   = <<-EOT
-    #!/bin/bash
-    ${local.user_data}
-    ${local.validate_bootstrap_script}
+  # user_data                   = <<-EOT
+  #   #!/bin/bash
+  #   ${local.user_data}
+  #   ${local.validate_bootstrap_script}
+  # EOT
+
+  user_data                   = <<-EOT    
+    ${local.user_data}    
   EOT
 
   user_data_base64            = var.user_data_base64
